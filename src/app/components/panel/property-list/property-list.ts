@@ -80,7 +80,14 @@ import { AuthService } from '../../../services/auth.service';
             <a [routerLink]="['/panel/editar', prop.id]" class="btn-edit">Editar</a>
             <a [routerLink]="['/panel/propiedades', prop.id, 'documentos']" class="btn-docs">Docs</a>
             <button (click)="openPhotosModal(prop)" class="btn-docs">Fotos</button>
-            <button class="btn-delete" (click)="deleteProperty(prop)">Baja</button>
+            <button class="btn-delete" (click)="deleteProperty(prop)" title="Eliminar Propiedad">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -183,7 +190,7 @@ import { AuthService } from '../../../services/auth.service';
     .btn-edit:hover { background: #dbeafe; }
     .btn-docs { background: #f3f4f6; color: #1f2937; border: 1px solid #cbd5e1; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; transition: background 0.2s; }
     .btn-docs:hover { background: #e2e8f0; }
-    .btn-delete { background: #fee2e2; color: #dc2626; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: background 0.2s; }
+    .btn-delete { background: #fee2e2; color: #dc2626; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: background 0.2s; display: inline-flex; align-items: center; justify-content: center; }
     .btn-delete:hover { background: #fca5a5; }
 
     /* Modal de Fotos y miniaturas */
