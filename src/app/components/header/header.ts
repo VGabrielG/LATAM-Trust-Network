@@ -51,6 +51,9 @@ import { AuthService } from '../../services/auth.service';
               <a routerLink="/panel/perfil" class="dropdown-item" (click)="dropdownOpen = false; menuOpen = false">
                 <span class="icon">👤</span> Mi Perfil
               </a>
+              <a *ngIf="authService.userRole() === 'admin'" routerLink="/panel/autorizados" class="dropdown-item" (click)="dropdownOpen = false; menuOpen = false" style="color: #fbbf24;">
+                <span class="icon">🔒</span> Lista Autorizada
+              </a>
               <a routerLink="/panel/publicar" class="dropdown-item" (click)="dropdownOpen = false; menuOpen = false">
                 <span class="icon">➕</span> Publicar Inmueble
               </a>

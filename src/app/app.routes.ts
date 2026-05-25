@@ -15,6 +15,7 @@ import { BrokerDirectoryComponent } from './components/broker-directory/broker-d
 import { BrokerProfileViewComponent } from './components/broker-profile-view/broker-profile-view';
 import { SupportRequestComponent } from './components/panel/support-request/support-request';
 import { ImprovementsComponent } from './components/panel/improvements/improvements';
+import { AuthorizedListComponent } from './components/panel/authorized-list/authorized-list';
 import { brokerGuard } from './guards/broker.guard';
 
 export const routes: Routes = [
@@ -34,6 +35,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'propiedades', pathMatch: 'full' },
       { path: 'perfil', component: ProfileComponent },
+      { path: 'autorizados', component: AuthorizedListComponent },
       { path: 'propiedades', component: PropertyListComponent },
       { path: 'propiedades/:id/documentos', component: PropertyDocumentsComponent },
       { path: 'publicar', component: PropertyFormComponent },

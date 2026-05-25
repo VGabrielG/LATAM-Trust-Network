@@ -31,6 +31,9 @@ import { AuthService } from '../../../services/auth.service';
           <a routerLink="/panel/perfil" routerLinkActive="active" class="nav-link">
             Mi Perfil
           </a>
+          <a *ngIf="authService.userRole() === 'admin'" routerLink="/panel/autorizados" routerLinkActive="active" class="nav-link" style="color: #fcd34d;">
+            🔒 Lista Autorizada
+          </a>
           <a routerLink="/panel/propiedades" routerLinkActive="active" class="nav-link">
             Mis Propiedades
           </a>
@@ -44,6 +47,7 @@ import { AuthService } from '../../../services/auth.service';
             Blog de Mejoras
           </a>
         </nav>
+
         <div class="sidebar-footer">
           <button (click)="logout()" class="logout-btn">Cerrar Sesión</button>
         </div>

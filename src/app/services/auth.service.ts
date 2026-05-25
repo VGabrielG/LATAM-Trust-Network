@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Auth, authState, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, signInWithPopup } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -30,21 +30,92 @@ export class AuthService {
 
     // Escuchar cambios de estado de autenticación
     authState(this.auth).subscribe(async (user) => {
-      this.currentUser.set(user);
-      
-      if (user) {
-        this.isAuthorized.set(true);
-        this.userRole.set('broker');
-
-        if (this.router.url === '/login') {
-          this.router.navigate(['/panel/perfil']);
+      this.isLoading.set(true);
+      if (user && user.email) {
+        const authorized = await this.checkUserAuthorization(user.email);
+        if (authorized) {
+          this.currentUser.set(user);
+          this.isAuthorized.set(true);
+          const isAdmin = ['gtefarikisopazo96@gmail.com', 'beltrangodoy@gmail.com'].includes(user.email.toLowerCase().trim());
+          this.userRole.set(isAdmin ? 'admin' : 'broker');
+          
+          if (this.router.url === '/login') {
+            this.router.navigate(['/panel/perfil']);
+          }
+        } else {
+          // Si no está autorizado, forzar deslogueo
+          await signOut(this.auth);
+          this.currentUser.set(null);
+          this.isAuthorized.set(false);
+          this.userRole.set(null);
+          this.router.navigate(['/login'], { queryParams: { error: 'not_authorized' } });
         }
       } else {
+        this.currentUser.set(null);
         this.isAuthorized.set(false);
         this.userRole.set(null);
       }
       this.isLoading.set(false);
     });
+  }
+
+  async checkUserAuthorization(email: string): Promise<boolean> {
+    const formattedEmail = email.toLowerCase().trim();
+    if (['gtefarikisopazo96@gmail.com', 'beltrangodoy@gmail.com'].includes(formattedEmail)) {
+      return true;
+    }
+    try {
+      const docRef = doc(this.firestore, `authorized_brokers/${formattedEmail}`);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists();
+    } catch (e) {
+      console.error('Error verificando autorización del correo:', e);
+      return false;
+    }
+  }
+
+  // Obtener lista de correos autorizados
+  async getAuthorizedBrokers(): Promise<{ email: string, role: string }[]> {
+    try {
+      const colRef = collection(this.firestore, 'authorized_brokers');
+      const snap = await getDocs(colRef);
+      const list: { email: string, role: string }[] = [];
+      snap.forEach(doc => {
+        list.push({ email: doc.id, role: doc.data()['role'] || 'broker' });
+      });
+      return list;
+    } catch (e) {
+      console.error('Error obteniendo corredores autorizados:', e);
+      return [];
+    }
+  }
+
+  // Agregar un correo autorizado
+  async addAuthorizedBroker(email: string, role: 'admin' | 'broker' = 'broker') {
+    try {
+      const formattedEmail = email.toLowerCase().trim();
+      const docRef = doc(this.firestore, `authorized_brokers/${formattedEmail}`);
+      await setDoc(docRef, { role });
+    } catch (e) {
+      console.error('Error agregando corredor autorizado:', e);
+      throw e;
+    }
+  }
+
+  // Eliminar un correo autorizado
+  async removeAuthorizedBroker(email: string) {
+    try {
+      const formattedEmail = email.toLowerCase().trim();
+      // Impedir borrar a los admins principales por seguridad
+      if (['gtefarikisopazo96@gmail.com', 'beltrangodoy@gmail.com'].includes(formattedEmail)) {
+        throw new Error('No se pueden remover los administradores principales.');
+      }
+      const docRef = doc(this.firestore, `authorized_brokers/${formattedEmail}`);
+      await deleteDoc(docRef);
+    } catch (e) {
+      console.error('Error eliminando corredor autorizado:', e);
+      throw e;
+    }
   }
 
   async loginWithGoogle() {
@@ -107,10 +178,19 @@ export class AuthService {
   }
 
   private async handleAuthResult(user: User) {
-    if (user) {
-      this.isAuthorized.set(true);
-      this.userRole.set('broker');
-      this.router.navigate(['/panel/perfil']);
+    if (user && user.email) {
+      const authorized = await this.checkUserAuthorization(user.email);
+      if (authorized) {
+        this.isAuthorized.set(true);
+        const isAdmin = ['gtefarikisopazo96@gmail.com', 'beltrangodoy@gmail.com'].includes(user.email.toLowerCase().trim());
+        this.userRole.set(isAdmin ? 'admin' : 'broker');
+        this.router.navigate(['/panel/perfil']);
+      } else {
+        await signOut(this.auth);
+        this.isAuthorized.set(false);
+        this.userRole.set(null);
+        this.router.navigate(['/login'], { queryParams: { error: 'not_authorized' } });
+      }
     }
   }
 
