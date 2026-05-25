@@ -166,8 +166,8 @@ import { AuthService } from '../../../services/auth.service';
     }
     .floating-feedback-btn {
       position: fixed;
-      bottom: 25px;
-      right: 25px;
+      bottom: 110px;
+      right: 40px;
       background: var(--primary, #fbbf24);
       color: #000;
       border: 1px solid var(--primary, #fbbf24);
@@ -188,6 +188,12 @@ import { AuthService } from '../../../services/auth.service';
       box-shadow: 0 15px 30px rgba(251, 191, 36, 0.5);
       background: #fff;
       border-color: #fff;
+    }
+    @media (max-width: 768px) {
+      .floating-feedback-btn {
+        bottom: 80px;
+        right: 20px;
+      }
     }
   `]
 })
