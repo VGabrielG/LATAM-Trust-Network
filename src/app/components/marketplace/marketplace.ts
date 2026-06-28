@@ -24,8 +24,24 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
           <p class="marketplace-subtitle">Catálogo integrado de inmuebles gestionados por nuestra red de corredores autorizados.</p>
         </div>
 
-        <!-- Filters Bar -->
-        <form [formGroup]="filterForm" class="filter-bar animate-fade-in">
+        <!-- Mobile Filter Button Trigger -->
+        <div class="mobile-filter-trigger-container">
+          <button class="mobile-filter-btn mono" (click)="toggleMobileFilters()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span>Filtros</span>
+            <span class="filter-count-badge" *ngIf="getActiveFiltersCount() > 0">{{ getActiveFiltersCount() }}</span>
+          </button>
+        </div>
+
+        <!-- Filters Bar (Collapsible Drawer on Mobile) -->
+        <form [formGroup]="filterForm" class="filter-bar animate-fade-in" [class.mobile-open]="showMobileFilters">
+          <div class="drawer-header">
+            <span class="mono">Filtros de Búsqueda</span>
+            <button type="button" class="close-drawer-btn" (click)="toggleMobileFilters()">&times;</button>
+          </div>
+
           <div class="filter-group text-search">
             <label class="mono label-small">Búsqueda</label>
             <input type="text" formControlName="searchText" placeholder="Comuna, dirección o título..." class="filter-input" (input)="applyFilters()" />
@@ -67,6 +83,10 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
               <input type="number" formControlName="maxPrice" placeholder="Máx (UF)" class="filter-input" (input)="applyFilters()" />
             </div>
           </div>
+
+          <div class="drawer-footer">
+            <button type="button" class="btn btn-outline close-drawer-action" (click)="toggleMobileFilters()">Ver Resultados</button>
+          </div>
         </form>
 
         <!-- Status Info -->
@@ -98,6 +118,11 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
                 <button class="carousel-btn prev" (click)="prevPhoto($event, cardIndex, p.photos.length)">&#8249;</button>
                 <button class="carousel-btn next" (click)="nextPhoto($event, cardIndex, p.photos.length)">&#8250;</button>
               </ng-container>
+
+              <!-- Carousel Indicators (Dots) -->
+              <div class="carousel-dots" *ngIf="p.photos.length > 1">
+                <span *ngFor="let dot of p.photos; let i = index" class="dot" [class.active]="getPhotoIndex(cardIndex) === i"></span>
+              </div>
             </div>
 
             <!-- Card Info -->
@@ -224,6 +249,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
     .marketplace-wrapper {
       background-color: var(--bg-color);
       min-height: 100vh;
+      transition: background-color 0.5s ease;
     }
     
     .marketplace-container {
@@ -237,6 +263,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
       text-align: left;
       border-left: 2px solid var(--primary);
       padding-left: 1.5rem;
+      transition: border-color 0.5s ease;
     }
     
     .text-accent {
@@ -263,6 +290,16 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
       margin: 0;
     }
 
+    /* Mobile trigger header hidden on desktop */
+    .mobile-filter-trigger-container {
+      display: none;
+    }
+
+    /* Drawer Header & Footer hidden on desktop */
+    .drawer-header, .drawer-footer {
+      display: none;
+    }
+
     /* Elegant Glassmorphic Filter Bar */
     .filter-bar {
       display: grid;
@@ -275,6 +312,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
       padding: 1.5rem;
       margin-bottom: 3rem;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
     }
 
     .filter-group {
@@ -309,7 +347,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
     }
 
     .filter-input:focus, .filter-select:focus {
-      border-color: #fff;
+      border-color: var(--primary);
       background: rgba(255, 255, 255, 0.08);
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
@@ -374,6 +412,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
       letter-spacing: 1px;
       text-transform: uppercase;
       font-family: monospace;
+      z-index: 3;
     }
 
     .badge.operation-inline {
@@ -388,6 +427,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
       background: #000;
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: border-color 0.5s ease;
     }
     
     .badge.operation.venta {
@@ -404,6 +444,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
     .badge.status.vendida { background: #ef4444; }
     .badge.status.arrendada { background: #3b82f6; }
 
+    /* Carousel Arrows - Hide by default, show on hover */
     .carousel-btn {
       position: absolute;
       top: 50%;
@@ -411,24 +452,57 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
       background: rgba(0, 0, 0, 0.6);
       color: #fff;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.3s;
-      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 4;
     }
 
     .carousel-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: var(--primary);
+      color: var(--bg-color);
     }
 
-    .carousel-btn.prev { left: 10px; }
-    .carousel-btn.next { right: 10px; }
+    .carousel-btn.prev { left: 12px; }
+    .carousel-btn.next { right: 12px; }
+
+    .property-card:hover .carousel-btn {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Carousel Indicators (Dots) */
+    .carousel-dots {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 5;
+    }
+
+    .carousel-dots .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .carousel-dots .dot.active {
+      width: 18px;
+      border-radius: 3px;
+      background: #fff;
+    }
 
     /* Card Details */
     .card-info {
@@ -448,54 +522,49 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
     .card-commune {
       color: var(--text-muted);
       font-size: 0.75rem;
-      letter-spacing: 1px;
     }
 
     .card-property-type {
       color: var(--primary);
       font-size: 0.75rem;
-      letter-spacing: 1px;
       font-weight: 600;
+      transition: color 0.5s ease;
     }
 
     .card-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #fff;
-      margin: 0 0 0.5rem 0;
+      margin: 0.2rem 0 0.8rem 0;
       line-height: 1.4;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      transition: color 0.3s;
+    }
+
+    .property-card:hover .card-title {
+      color: var(--primary);
     }
 
     .card-price {
       font-family: monospace;
       font-size: 1.4rem;
-      color: #fff;
       font-weight: 700;
-      margin: 0 0 1.2rem 0;
-      letter-spacing: -0.5px;
+      color: #fff;
     }
 
     .card-specs {
       display: flex;
-      gap: 1.2rem;
-      margin-bottom: 1.5rem;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
 
     .spec-item {
-      font-size: 0.85rem;
-      color: #e5e7eb;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
+      font-size: 0.8rem;
+      color: #fff;
     }
 
     .spec-label {
       color: var(--text-muted);
-      font-size: 0.75rem;
     }
 
     .card-divider {
@@ -548,9 +617,9 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
     }
 
     .btn-contact:hover {
-      background: #fff;
-      border-color: #fff;
-      color: #000;
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--bg-color);
     }
 
     /* Loader & No Results States */
@@ -568,7 +637,7 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
       width: 32px;
       height: 32px;
       border: 2px solid rgba(255, 255, 255, 0.1);
-      border-top-color: #fff;
+      border-top-color: var(--primary);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -617,27 +686,126 @@ import { loadGoogleMaps } from '../../utils/google-maps-loader';
 
     .animate-pop { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
+    /* Responsive & Mobile Drawer Layout */
     @media (max-width: 991px) {
-      .filter-bar {
-        grid-template-columns: 1fr 1fr;
+      .mobile-filter-trigger-container {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 2rem;
       }
-      .text-search, .pricing-range {
-        grid-column: span 2;
+
+      .mobile-filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .mobile-filter-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--primary);
+      }
+
+      .filter-count-badge {
+        background: var(--primary);
+        color: var(--bg-color);
+        font-weight: 700;
+        font-size: 0.7rem;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .filter-bar {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        max-width: 380px;
+        height: 100vh;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        z-index: 10000;
+        padding: 2.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.6);
+        transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        margin-bottom: 0;
+        overflow-y: auto;
+        border-radius: 0;
+        border: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .filter-bar.mobile-open {
+        right: 0;
+      }
+
+      .drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .drawer-header span {
+        color: var(--primary);
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .close-drawer-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 2rem;
+        cursor: pointer;
+        transition: color 0.3s;
+        line-height: 1;
+      }
+
+      .close-drawer-btn:hover {
+        color: #fff;
+      }
+
+      .drawer-footer {
+        display: flex;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .close-drawer-action {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem;
+        font-size: 0.8rem;
       }
     }
 
     @media (max-width: 576px) {
-      .filter-bar {
-        grid-template-columns: 1fr;
-      }
-      .text-search, .pricing-range {
-        grid-column: span 1;
-      }
       .properties-grid {
         grid-template-columns: 1fr;
       }
       .marketplace-title {
         font-size: 2.2rem;
+      }
+      .filter-bar {
+        max-width: 100%;
       }
     }
   `]
@@ -652,6 +820,7 @@ export class MarketplaceComponent implements OnInit {
   filteredProperties: Property[] = [];
   isLoading = true;
   showModal = false;
+  showMobileFilters = false;
 
   // Selected Property Popup
   selectedProperty: Property | null = null;
@@ -678,6 +847,22 @@ export class MarketplaceComponent implements OnInit {
 
   openModal() {
     this.showModal = true;
+  }
+
+  toggleMobileFilters() {
+    this.showMobileFilters = !this.showMobileFilters;
+  }
+
+  getActiveFiltersCount(): number {
+    let count = 0;
+    const { searchText, brokerEmail, operationType, propertyType, minPrice, maxPrice } = this.filterForm.value;
+    if (searchText && searchText.trim()) count++;
+    if (brokerEmail) count++;
+    if (operationType) count++;
+    if (propertyType) count++;
+    if (minPrice) count++;
+    if (maxPrice) count++;
+    return count;
   }
 
   private async loadData() {

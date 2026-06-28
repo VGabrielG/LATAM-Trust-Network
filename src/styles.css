@@ -11,19 +11,27 @@
   --mono-font: 'Space Mono', monospace;
   --glass: rgba(255, 255, 255, 0.02);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --blueprint-line: rgba(255, 255, 255, 0.05);
+  --blueprint-line-color: 255, 255, 255;
+  --blueprint-line-opacity: 0.05;
+  --blueprint-line: rgba(var(--blueprint-line-color), var(--blueprint-line-opacity));
   --img-filter: none;
   --img-opacity: 1;
 }
 
 body {
-  background-color: var(--bg-color);
-  background-image: 
-    linear-gradient(var(--blueprint-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-color: transparent;
   font-family: var(--body-font);
   color: var(--text-main);
+}
+
+/* Page wrappers must be transparent so the canvas behind shows through */
+.landing-wrapper,
+.marketplace-wrapper,
+.broker-profile-wrapper,
+.panel-wrapper,
+.nosotros-wrapper,
+.service-detail-wrapper {
+  background-color: transparent !important;
 }
 
 .mono {
@@ -44,7 +52,7 @@ body {
 
 .btn-primary {
   background: var(--primary);
-  color: #000;
+  color: var(--btn-text-color, #000);
   box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.2);
 }
 
@@ -307,3 +315,336 @@ body {
     width: 100%;
   }
 }
+
+
+/* ==========================================
+   DYNAMIC SERVICES STYLE SELECTOR
+   ========================================== */
+
+/* 1. Bento Grid Style */
+[data-service-style="bento"] .services-dropdown {
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 3rem;
+}
+
+[data-service-style="bento"] .dropdown-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+[data-service-style="bento"] .service-category {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2.2rem;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  overflow: hidden;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-service-style="bento"] .service-category:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(255, 255, 255, 0.03);
+}
+
+/* Bento Badges using CSS Pseudo-elements */
+[data-service-style="bento"] .service-category::after {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-family: var(--mono-font);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  letter-spacing: 1px;
+}
+
+[data-service-style="bento"] .service-category:nth-child(1)::after {
+  content: '2% & 2%';
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.3);
+  background: rgba(251, 191, 36, 0.05);
+}
+
+[data-service-style="bento"] .service-category:nth-child(2)::after {
+  content: '50%';
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.3);
+  background: rgba(96, 165, 250, 0.05);
+}
+
+[data-service-style="bento"] .service-category:nth-child(3)::after {
+  content: '10%';
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.3);
+  background: rgba(52, 211, 153, 0.05);
+}
+
+[data-service-style="bento"] .service-category:nth-child(4)::after {
+  content: 'PORTFOLIO';
+  color: #f472b6;
+  border-color: rgba(244, 114, 182, 0.3);
+  background: rgba(244, 114, 182, 0.05);
+}
+
+[data-service-style="bento"] .cat-header {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: inline-block;
+  width: auto;
+}
+
+[data-service-style="bento"] .service-link {
+  background: transparent;
+  padding: 0.6rem 0;
+  margin-left: 0;
+}
+
+[data-service-style="bento"] .service-link:hover {
+  background: transparent;
+  padding-left: 0.5rem;
+  color: var(--primary);
+}
+
+
+/* 2. Accordion/Split Panels Style */
+[data-service-style="split"] .services-dropdown {
+  background: rgba(8, 8, 8, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.5rem;
+}
+
+[data-service-style="split"] .dropdown-grid {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+[data-service-style="split"] .service-category {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 2rem 1.5rem;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+[data-service-style="split"] .service-category:hover {
+  flex: 2;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-service-style="split"] .cat-header {
+  white-space: nowrap;
+  font-size: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1rem;
+}
+
+[data-service-style="split"] .cat-list {
+  margin-top: 1.5rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+[data-service-style="split"] .service-category:hover .cat-list {
+  opacity: 1;
+}
+
+[data-service-style="split"] .service-link {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.5rem;
+}
+
+
+/* 3. Tech Monospace Console Style */
+[data-service-style="console"] .services-dropdown {
+  background: #05070a !important;
+  border: 2px solid #00ff66 !important;
+  box-shadow: 0 0 40px rgba(0, 255, 102, 0.15) !important;
+  padding: 3rem;
+  border-radius: 6px;
+  position: relative;
+}
+
+/* Terminal top bar decoration */
+[data-service-style="console"] .services-dropdown::before {
+  content: 'SYSTEM_STATUS: ACTIVE // SERVICE_ENGINE_V2';
+  position: absolute;
+  top: 12px;
+  left: 3rem;
+  font-family: var(--mono-font);
+  font-size: 0.65rem;
+  color: #00ff66;
+  opacity: 0.8;
+  letter-spacing: 2px;
+}
+
+[data-service-style="console"] .dropdown-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+[data-service-style="console"] .cat-header {
+  color: #00ff66 !important;
+  font-family: var(--mono-font) !important;
+  border-bottom: 1px dashed rgba(0, 255, 102, 0.3) !important;
+  font-size: 0.75rem;
+}
+
+[data-service-style="console"] .cat-header::after {
+  background: #00ff66 !important;
+}
+
+[data-service-style="console"] .service-link {
+  color: rgba(0, 255, 102, 0.75) !important;
+  font-family: var(--mono-font) !important;
+  font-size: 0.85rem;
+  background: transparent !important;
+  transition: all 0.2s steps(4);
+}
+
+[data-service-style="console"] .service-link:hover {
+  color: #ffffff !important;
+  background: rgba(0, 255, 102, 0.15) !important;
+  text-shadow: 0 0 5px #00ff66;
+  padding-left: 1.2rem;
+}
+
+[data-service-style="console"] .service-link .bullet {
+  color: #00ff66 !important;
+  opacity: 1 !important;
+}
+
+/* Responsive collapse for services styles */
+@media (max-width: 991px) {
+  [data-service-style="bento"] .dropdown-grid,
+  [data-service-style="console"] .dropdown-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  [data-service-style="split"] .dropdown-grid {
+    flex-direction: column !important;
+  }
+  
+  [data-service-style="split"] .service-category {
+    flex: none !important;
+    width: 100% !important;
+  }
+}
+
+/* ==========================================
+   BEIGE FLAT THEME OVERRIDES
+   ========================================== */
+
+/* Completely hide the background grid image */
+[data-theme="beige"] .container {
+  background-image: none !important;
+}
+
+/* Ensure contrast for text on light beige background */
+[data-theme="beige"] .detail-title,
+[data-theme="beige"] .detail-price,
+[data-theme="beige"] .spec-val,
+[data-theme="beige"] .spec-item,
+[data-theme="beige"] .card-title,
+[data-theme="beige"] .card-price,
+[data-theme="beige"] h1,
+[data-theme="beige"] h2,
+[data-theme="beige"] h3,
+[data-theme="beige"] p,
+[data-theme="beige"] .detail-modal-body,
+[data-theme="beige"] .detail-description,
+[data-theme="beige"] .detail-amenities,
+[data-theme="beige"] .service-link {
+  color: var(--text-main) !important;
+}
+
+[data-theme="beige"] .spec-label {
+  color: var(--text-muted) !important;
+}
+
+/* Button & Card background adjustments for light mode */
+[data-theme="beige"] .btn-square::after {
+  background: #f2f1ed !important;
+}
+
+[data-theme="beige"] .btn-square:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="beige"] .property-card {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="beige"] .property-card:hover {
+  border-color: var(--primary) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="beige"] .card-divider,
+[data-theme="beige"] .detail-divider {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="beige"] .floating-theme-btn,
+[data-theme="beige"] .floating-style-btn,
+[data-theme="beige"] .floating-effects-btn {
+  background-color: var(--surface-color) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="beige"] .floating-theme-btn:hover,
+[data-theme="beige"] .floating-style-btn:hover,
+[data-theme="beige"] .floating-effects-btn:hover {
+  border-color: var(--primary) !important;
+}
+
+[data-theme="beige"] .theme-palette-dropdown,
+[data-theme="beige"] .style-dropdown,
+[data-theme="beige"] .effects-dropdown {
+  background: rgba(242, 241, 237, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+}
+
+[data-theme="beige"] .reset-btn {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="beige"] .color-option-btn,
+[data-theme="beige"] .style-option-btn,
+[data-theme="beige"] .layout-option-btn {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="beige"] .color-option-btn:hover,
+[data-theme="beige"] .style-option-btn:hover,
+[data-theme="beige"] .layout-option-btn:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+
+

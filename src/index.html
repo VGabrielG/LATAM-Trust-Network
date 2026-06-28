@@ -11,12 +11,63 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- PayPal SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=ARsWl3BaU87Hod2Y1obsvXDe1kbHpelS3O0ZF3WSislBC4Pf8-MWhdJQzRgzBJ5fjEbmVj08OFakSIEv&currency=USD"></script>
 </head>
 <body class="blueprint-bg">
   <app-root></app-root>
+  <!-- =====================================================================
+       SCHEMA FAQPage (JSON-LD) — refleja EXACTAMENTE el texto visible.
+       Mejora la comprensión semántica y la elegibilidad para PAA / motores
+       generativos.
+       ===================================================================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "es-CL",
+    "about": "Compra, venta y corretaje de propiedades en Chile",
+    "mainEntity": [
+      { "@type": "Question", "name": "¿Qué es un estudio de títulos y por qué lo necesito antes de comprar?",
+        "acceptedAnswer": { "@type": "Answer", "text": "El estudio de títulos es el análisis legal de la historia de una propiedad, normalmente los últimos 10 años, que confirma que el vendedor es el dueño real y que no existen hipotecas, gravámenes, embargos ni litigios ocultos. Se realiza después de la promesa de compraventa y antes de la escritura. Si compras con crédito hipotecario, el banco lo exige de todas formas." } },
+      { "@type": "Question", "name": "¿Cuánto cuesta un estudio de títulos en Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Como referencia de mercado, un estudio de títulos en Chile cuesta entre 4 y 6 UF, y puede subir según la complejidad de la propiedad. Valores referenciales: cotiza tu caso para un monto exacto." } },
+      { "@type": "Question", "name": "¿Cómo comprar una propiedad de forma segura y sin riesgos?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Para comprar seguro: firma una promesa de compraventa antes de pagar, exige un estudio de títulos completo, paga con vale vista e instrucciones notariales, y nunca cierres bajo presión. Con instrucciones notariales el dinero se libera solo cuando la propiedad queda inscrita a tu nombre en el Conservador de Bienes Raíces." } },
+      { "@type": "Question", "name": "¿Cómo evito una estafa inmobiliaria al comprar?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Para evitar una estafa inmobiliaria, verifica al dueño en el Conservador de Bienes Raíces, revisa el certificado de hipotecas y gravámenes y confirma el estado civil del vendedor antes de pagar. Desconfía de precios muy bajos, vendedores que no dan la cara y presión para pagar reservas altas. En sociedad conyugal el cónyuge debe firmar o la venta es nula." } },
+      { "@type": "Question", "name": "Si compro con crédito hipotecario, ¿igual necesito asesoría propia?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí: el estudio de títulos del banco protege su crédito, no necesariamente todos tus intereses como comprador. Una asesoría inmobiliaria propia revisa cláusulas abusivas, servidumbres, regularización y condiciones que el banco podría no observar." } },
+      { "@type": "Question", "name": "¿Cuándo se firma la promesa de compraventa y cuándo la escritura?",
+        "acceptedAnswer": { "@type": "Answer", "text": "La promesa de compraventa se firma primero y fija precio, forma de pago y plazos; la escritura pública se firma después ante notario, una vez aprobado el estudio de títulos. La propiedad pasa a tu nombre cuando la escritura se inscribe en el Conservador de Bienes Raíces." } },
+      { "@type": "Question", "name": "¿Qué gastos tiene el comprador al comprar una propiedad?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Los gastos del comprador son principalmente el estudio de títulos (4 a 6 UF de referencia), los gastos notariales y la inscripción en el Conservador de Bienes Raíces, que suele costar entre 0,2% y 0,3% del valor de la propiedad. Con crédito hipotecario se suman la tasación y los gastos del mutuo." } },
+      { "@type": "Question", "name": "¿Qué debo revisar antes de comprar una parcela?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Antes de comprar una parcela verifica que tenga subdivisión aprobada y rol propio ante el SII; cuidado con las parcelas en blanco, que se venden como derechos sobre un terreno sin rol individual y con riesgo de no poder inscribir el dominio ni construir. Revisa también acceso, factibilidad de agua y luz, y uso de suelo." } },
+      { "@type": "Question", "name": "¿Qué documentos necesito para vender mi propiedad en Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Para vender una propiedad en Chile necesitas, como mínimo: certificado de dominio vigente, certificado de hipotecas, gravámenes y prohibiciones, contribuciones al día, certificado de avalúo fiscal y las escrituras anteriores. Si es departamento o condominio, gastos comunes al día y reglamento de copropiedad; si hubo ampliaciones, la recepción final de la DOM. La mayoría de los certificados del Conservador tienen vigencia cercana a 30 días." } },
+      { "@type": "Question", "name": "¿Qué impuestos pago al vender una propiedad?",
+        "acceptedAnswer": { "@type": "Answer", "text": "La mayoría de quienes venden su vivienda en Chile no paga impuesto a la ganancia de capital, gracias a una exención de 8.000 UF sobre la utilidad acumulada en la vida. El impuesto al mayor valor se calcula solo sobre la ganancia (precio de venta menos costo de compra reajustado por IPC más mejoras), no sobre el precio total. Si superas las 8.000 UF, el excedente tributa con Impuesto Global Complementario o con un Impuesto Único Sustitutivo del 10%. Es información orientativa y no reemplaza la asesoría de un contador o del SII." } },
+      { "@type": "Question", "name": "¿Puedo vender mi propiedad si todavía tiene hipoteca?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sí, puedes vender una propiedad con hipoteca vigente: se tramita el alzamiento de la hipoteca, normalmente en simultáneo con la firma de la escritura de compraventa. El comprador paga, una parte salda el crédito con el banco y este libera el gravamen, dejando la propiedad limpia para el nuevo dueño." } },
+      { "@type": "Question", "name": "¿Cuánto cobra un corredor por vender mi propiedad?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Por vender una propiedad, el corredor suele cobrar un 2% del valor de venta más IVA al vendedor; no es una tarifa fijada por ley, sino práctica de mercado. A cambio gestiona la tasación, la promoción, las visitas, la documentación y el cierre." } },
+      { "@type": "Question", "name": "¿Cómo sé cuál es el precio justo para vender mi casa?",
+        "acceptedAnswer": { "@type": "Answer", "text": "El precio justo se determina con una tasación comparada: ventas recientes de propiedades similares en tu zona, plusvalía del sector y estado del inmueble. Publicar muy por encima del mercado alarga la venta y muy por debajo te hace perder dinero; una tasación profesional fija un precio defendible." } },
+      { "@type": "Question", "name": "¿Necesito regularizar ampliaciones antes de vender?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Conviene regularizar las ampliaciones antes de vender: una propiedad sin recepción final o con obras no regularizadas (Ley del Mono) pierde valor y dificulta que el comprador obtenga crédito hipotecario. Regularizar en la Dirección de Obras Municipales evita observaciones durante el estudio de títulos y retrasos en el cierre." } },
+      { "@type": "Question", "name": "¿Qué se necesita para ser corredor de propiedades en Chile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "En Chile no se exige título universitario ni licencia estatal para ser corredor de propiedades: el Registro Nacional de Corredores fue derogado en 1986. Para operar legalmente debes iniciar actividades en el SII, sacar patente comercial municipal y emitir boletas o facturas. La formación en la parte legal, tasación, captación y cierre es lo que marca la diferencia." } },
+      { "@type": "Question", "name": "¿Es obligatorio tener una certificación o curso para ejercer como corredor?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No es obligatorio por ley, pero sí altamente recomendable: el corretaje en Chile no está regulado como profesión colegiada. Cualquiera puede empezar cumpliendo los requisitos tributarios, pero sin bases legales y comerciales la mayoría abandona antes de cerrar su primera operación." } },
+      { "@type": "Question", "name": "¿Cuánto gana un corredor de propiedades y cómo se cobran las comisiones?",
+        "acceptedAnswer": { "@type": "Answer", "text": "En Chile lo habitual es que el corredor cobre 2% del valor a cada parte en compraventa, cerca de 4% total, y el 50% de un mes de renta a cada parte en arriendo. Los honorarios no están fijados por ley y el ingreso real depende de cuántas operaciones cierres y de tu prospección." } },
+      { "@type": "Question", "name": "¿Qué trámites legales y tributarios debo hacer para empezar como corredor?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Para empezar como corredor: inicia actividades en el SII, obtén patente comercial municipal y emite boletas o facturas por tus servicios. Además, debes presentar la declaración jurada anual al SII por arriendos que intermedias y reportar operaciones sospechosas a la UAF según la Ley 19.913." } },
+      { "@type": "Question", "name": "¿Dónde puedo capacitarme gratis como corredor de propiedades?",
+        "acceptedAnswer": { "@type": "Answer", "text": "En la Academia LATAM Trust ofrecemos formación gratuita en línea para corredores en Chile: fundamentos legales del corretaje, estudio de títulos, tasación, captación de propiedades y cierre de operaciones." } }
+    ]
+  }
+  </script>
 </body>
 </html>

@@ -10,26 +10,34 @@ import { CommonModule } from '@angular/common';
       <div class="container footer-inner">
         <div class="footer-brand">
           <div class="logo">
-            <img src="favicon.png" alt="Logo" class="logo-img">
-            <span class="logo-text">LATAM</span><span class="logo-accent">TRUST</span>
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <span class="logo-text">LTN</span><span class="logo-accent"> Chile</span>
           </div>
           <p class="copyright mono">© {{ currentYear }} Engineering of Trust. Todos los derechos reservados.</p>
         </div>
         
-        <div class="footer-links">
-          <a href="#" class="footer-link">Términos</a>
-          <a href="#" class="footer-link">Privacidad</a>
-          <a href="mailto:contacto@latamtrust.cl" class="footer-link">Contacto</a>
+        <div class="footer-contact">
+          <span class="contact-label mono">CONTÁCTANOS</span>
+          <div class="contact-links">
+            <a href="mailto:contacto@latamtrust.cl" class="contact-link">
+              <span class="contact-icon">✉</span> contacto@latamtrust.cl
+            </a>
+            <a href="https://wa.me/56978566562" target="_blank" rel="noopener noreferrer" class="contact-link">
+              <span class="contact-icon">💬</span> WhatsApp: +56 9 7856 6562
+            </a>
+          </div>
         </div>
       </div>
     </footer>
   `,
   styles: [`
     .footer {
-      background: #050505;
-      padding: 3rem 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: #000000;
+      padding: 3.5rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       margin-top: 5rem;
+      position: relative;
+      z-index: 10;
     }
     .footer-inner {
       display: flex;
@@ -38,46 +46,88 @@ import { CommonModule } from '@angular/common';
       gap: 2rem;
     }
     .logo { 
-      font-size: 1.2rem; 
-      font-weight: 800; 
-      letter-spacing: -1px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem; 
+      font-weight: 700; 
+      letter-spacing: -0.5px;
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
     }
-    .logo-img { height: 24px; width: auto; opacity: 0.8; }
-    .logo-text { color: #fff; }
-    .logo-accent { color: var(--primary); }
+    .logo-img { 
+      height: 26px; 
+      width: auto; 
+      opacity: 0.9; 
+    }
+    .logo-text { 
+      color: var(--text-main); 
+    }
+    .logo-accent { 
+      color: var(--primary); 
+    }
     
     .copyright {
       font-size: 0.7rem;
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--text-muted);
       letter-spacing: 0.5px;
+      opacity: 0.8;
     }
     
-    .footer-links {
+    .footer-contact {
       display: flex;
-      gap: 2rem;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
     }
-    .footer-link {
-      color: rgba(255, 255, 255, 0.5);
-      text-decoration: none;
-      font-size: 0.75rem;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-    .footer-link:hover {
+    
+    .contact-label {
+      font-size: 0.7rem;
       color: var(--primary);
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .contact-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .contact-icon {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .contact-link:hover {
+      color: var(--text-main);
+      transform: translateX(-4px);
     }
 
     @media (max-width: 768px) {
       .footer-inner {
         flex-direction: column;
         text-align: center;
+        gap: 2.5rem;
       }
       .logo { justify-content: center; }
-      .footer-links { justify-content: center; gap: 1.5rem; }
+      .footer-contact {
+        align-items: center;
+      }
+      .contact-link:hover {
+        transform: translateY(-2px);
+      }
     }
   `]
 })

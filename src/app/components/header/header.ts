@@ -12,8 +12,8 @@ import { AuthService } from '../../services/auth.service';
       <div class="header-inner container">
         <div class="brand">
           <div class="logo" routerLink="/">
-            <img src="favicon.png" alt="Logo" class="logo-img">
-            <span class="logo-text">LATAM</span><span class="logo-accent">TRUST</span>
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <span class="logo-text">LTN</span><span class="logo-accent"> Chile</span>
           </div>
         </div>
         
@@ -82,21 +82,60 @@ import { AuthService } from '../../services/auth.service';
           <a routerLink="/marketplace" class="dropdown-nav-link" (click)="menuOpen = false">
             <span class="nav-number">02</span> MARKETPLACE
           </a>
+          
+          <!-- Collapsible Services Submenu -->
+          <div class="services-submenu-container">
+            <a href="javascript:void(0)" class="dropdown-nav-link" (click)="toggleServices($event)">
+              <span class="nav-number">03</span> SERVICIOS <span class="arrow-indicator" [class.open]="showServices">▾</span>
+            </a>
+            
+            <div class="submenu-wrapper animate-fade-in" *ngIf="showServices">
+              <!-- Category Selector Buttons (Gradient from Black to White) -->
+              <div class="category-buttons-row">
+                <button *ngFor="let cat of serviceCategories; let idx = index" 
+                        class="cat-select-btn mono" 
+                        [class.active]="activeCategoryIndex === idx"
+                        (click)="selectCategory(idx, $event)"
+                        [style.background-color]="getCatBg(idx)"
+                        [style.border-color]="getCatBorder(idx)"
+                        [style.color]="getCatColor(idx)">
+                  {{ cat.shortTitle }}
+                </button>
+              </div>
+
+              <!-- List of Services in Active Category -->
+              <div class="submenu-services-list" *ngIf="activeCategoryIndex !== null">
+                <div class="service-accordion-item" *ngFor="let opt of serviceCategories[activeCategoryIndex].options; let sIdx = index">
+                  <button class="service-accordion-header" (click)="toggleServiceDetail(sIdx, $event)" [class.expanded]="activeServiceIndex === sIdx">
+                    <span class="bullet">//</span> {{ opt.label }}
+                    <span class="chevron">{{ activeServiceIndex === sIdx ? '−' : '+' }}</span>
+                  </button>
+                  <div class="service-accordion-body" *ngIf="activeServiceIndex === sIdx">
+                    <p class="service-desc">{{ opt.desc }}</p>
+                    <a [routerLink]="opt.link" class="service-go-link mono" (click)="menuOpen = false; showServices = false">
+                      Ver Detalles de Servicio →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <a routerLink="/nosotros" class="dropdown-nav-link" (click)="menuOpen = false">
-            <span class="nav-number">03</span> NOSOTROS
+            <span class="nav-number">04</span> NOSOTROS
           </a>
           <a routerLink="/corredores" class="dropdown-nav-link" (click)="menuOpen = false">
-            <span class="nav-number">04</span> CORREDORES
+            <span class="nav-number">05</span> CORREDORES
           </a>
           <a routerLink="/unete" class="dropdown-nav-link" (click)="menuOpen = false">
-            <span class="nav-number">05</span> ÚNETE COMO CORREDOR
+            <span class="nav-number">06</span> ÚNETE COMO CORREDOR
           </a>
           <a routerLink="/panel" *ngIf="authService.isAuthorized()" class="dropdown-nav-link panel-highlight" (click)="menuOpen = false">
-            <span class="nav-number">06</span> PANEL DE CONTROL
+            <span class="nav-number">07</span> PANEL DE CONTROL
           </a>
           <a href="javascript:void(0)" class="dropdown-nav-link" (click)="onContactClick(); menuOpen = false">
-            <span class="nav-number" *ngIf="!authService.isAuthorized()">06</span>
-            <span class="nav-number" *ngIf="authService.isAuthorized()">07</span>
+            <span class="nav-number" *ngIf="!authService.isAuthorized()">07</span>
+            <span class="nav-number" *ngIf="authService.isAuthorized()">08</span>
             CONTÁCTANOS
           </a>
         </nav>
@@ -135,9 +174,10 @@ import { AuthService } from '../../services/auth.service';
     }
     .brand { display: flex; flex-direction: column; }
     .logo { 
+      font-family: 'Montserrat', sans-serif;
       font-size: 1.8rem; 
-      font-weight: 800; 
-      letter-spacing: -1px;
+      font-weight: 700; 
+      letter-spacing: -0.5px;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
@@ -470,37 +510,145 @@ import { AuthService } from '../../services/auth.service';
     .dropdown-nav-link.panel-highlight:hover {
       background: rgba(251, 191, 36, 0.1);
     }
-    .dropdown-footer {
+
+    /* Collapsible Services Submenu Styles */
+    .services-submenu-container {
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
     }
-    .footer-divider {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.08);
+    .arrow-indicator {
+      margin-left: auto;
+      transition: transform 0.3s ease;
+      font-size: 1.2rem;
     }
-    .footer-phone-link {
-      font-size: 0.95rem;
+    .arrow-indicator.open {
+      transform: rotate(180deg);
       color: var(--primary);
-      text-decoration: none;
+    }
+    
+    /* Elegant Accordion Dropdown style */
+    .submenu-wrapper {
+      padding-left: 0.5rem;
+      margin: 0.5rem 0 0.8rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .category-buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .cat-select-btn {
+      flex: 1;
+      min-width: 100px;
+      font-size: 0.65rem;
+      padding: 8px 10px;
+      border: 1px solid;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .cat-select-btn.active {
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+      border-color: #fff !important;
+    }
+
+    .submenu-services-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 0.8rem;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .service-accordion-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding-bottom: 0.5rem;
+    }
+    .service-accordion-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .service-accordion-header {
+      width: 100%;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px 0;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      justify-content: center;
-      padding: 5px 0;
+      justify-content: space-between;
+      text-align: left;
+      transition: color 0.2s;
     }
-    .footer-phone-link .dot {
-      width: 6px;
-      height: 6px;
-      background: var(--primary);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--primary);
+    .service-accordion-header:hover, 
+    .service-accordion-header.expanded {
+      color: var(--primary);
     }
-    .w-full {
-      width: 100%;
+    .service-accordion-header .bullet {
+      color: var(--primary);
+      margin-right: 6px;
+      opacity: 0.6;
     }
-    .desktop-only {
-      display: flex !important;
+    .service-accordion-header .chevron {
+      font-size: 0.9rem;
+      font-family: monospace;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .service-accordion-body {
+      padding: 4px 0 8px 18px;
+      animation: expandSlow 0.2s ease-out;
+    }
+
+    @keyframes expandSlow {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .service-desc {
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0 0 8px 0;
+    }
+
+    .service-go-link {
+      font-size: 0.68rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+    .service-go-link:hover {
+      transform: translateX(3px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @media (max-width: 991px) {
@@ -524,6 +672,91 @@ export class HeaderComponent {
   isScrolled = false;
   dropdownOpen = false;
   menuOpen = false;
+  showServices = false;
+  activeCategoryIndex: number | null = null;
+  activeServiceIndex: number | null = null;
+
+  serviceCategories = [
+    {
+      title: 'Quiero Vender — 2% & 2%',
+      shortTitle: 'Vender',
+      options: [
+        { 
+          label: 'Venta Tradicional', 
+          link: '/servicios/venta-tradicional',
+          desc: 'Corretaje premium de propiedades residenciales con comisión transparente de 2% para vendedor y 2% para comprador.'
+        },
+        { 
+          label: 'Con Herencia Pendiente', 
+          link: '/servicios/sucesiones',
+          desc: 'Regularizamos herencias y posesiones efectivas pendientes de forma paralela a la comercialización del inmueble.'
+        },
+        { 
+          label: 'Propiedad Comercial', 
+          link: '/servicios/propiedad-comercial',
+          desc: 'Venta de locales, bodegas, oficinas y terrenos comerciales con foco en rentabilidad y clientes corporativos.'
+        }
+      ]
+    },
+    {
+      title: 'Quiero Arrendar — 50%',
+      shortTitle: 'Arrendar',
+      options: [
+        { 
+          label: 'Arriendo Residencial', 
+          link: '/servicios/arriendo-residencial',
+          desc: 'Evaluación de perfil comercial de arrendatarios, codeudores solidarios, redacción de contratos y entrega del inmueble.'
+        },
+        { 
+          label: 'Arriendo Comercial', 
+          link: '/servicios/arriendo-comercial',
+          desc: 'Colocación estratégica de oficinas, locales comerciales y retail optimizando los contratos a largo plazo.'
+        },
+        { 
+          label: 'Mediación', 
+          link: '/servicios/mediacion',
+          desc: 'Arbitraje y resolución de conflictos entre propietarios y arrendatarios para regularizar situaciones complejas.'
+        }
+      ]
+    },
+    {
+      title: 'Administración de Bienes — 10%',
+      shortTitle: 'Admin',
+      options: [
+        { 
+          label: 'Herencias y Posesiones Efectivas', 
+          link: '/servicios/herencias-posesiones',
+          desc: 'Gestión legal, posesión efectiva testada o intestada para habilitar legalmente la transferencia de bienes raíces.'
+        },
+        { 
+          label: 'Renta Corta', 
+          link: '/servicios/renta-corta',
+          desc: 'Optimización de arriendos temporales tipo Airbnb, incluyendo limpieza, check-in/out, precios dinámicos y mantención.'
+        },
+        { 
+          label: 'Proyecto Cultural y Comercial', 
+          link: '/servicios/proyecto-cultural-comercial',
+          desc: 'Asesoría para reconvertir casonas o espacios históricos a fines comerciales, gastronómicos o centros culturales.'
+        }
+      ]
+    },
+    {
+      title: 'Soy Inversionista',
+      shortTitle: 'Invertir',
+      options: [
+        { 
+          label: 'Remates y Oportunidades', 
+          link: '/servicios/remates',
+          desc: 'Búsqueda activa de propiedades con valores bajo mercado, asesoría en remates judiciales y saneamiento legal.'
+        },
+        { 
+          label: 'Multifamily / Departamentos', 
+          link: '/servicios/multifamily',
+          desc: 'Evaluación y estructuración de carteras de departamentos residenciales para fondos o inversionistas privados.'
+        }
+      ]
+    }
+  ];
 
   authService = inject(AuthService);
   private elementRef = inject(ElementRef);
@@ -549,7 +782,7 @@ export class HeaderComponent {
     event.stopPropagation();
     this.dropdownOpen = !this.dropdownOpen;
     if (this.dropdownOpen) {
-      this.menuOpen = false; // close the main menu if avatar is opened
+      this.menuOpen = false;
     }
   }
 
@@ -557,8 +790,53 @@ export class HeaderComponent {
     event.stopPropagation();
     this.menuOpen = !this.menuOpen;
     if (this.menuOpen) {
-      this.dropdownOpen = false; // close avatar dropdown if main menu is opened
+      this.dropdownOpen = false;
+      this.showServices = false;
+      this.activeCategoryIndex = null;
+      this.activeServiceIndex = null;
     }
+  }
+
+  toggleServices(event: Event) {
+    event.stopPropagation();
+    this.showServices = !this.showServices;
+    if (this.showServices) {
+      this.activeCategoryIndex = 0; // Default to first category on open
+    } else {
+      this.activeCategoryIndex = null;
+    }
+    this.activeServiceIndex = null;
+  }
+
+  selectCategory(idx: number, event: Event) {
+    event.stopPropagation();
+    this.activeCategoryIndex = idx;
+    this.activeServiceIndex = null;
+  }
+
+  toggleServiceDetail(sIdx: number, event: Event) {
+    event.stopPropagation();
+    this.activeServiceIndex = this.activeServiceIndex === sIdx ? null : sIdx;
+  }
+
+  getCatBg(idx: number): string {
+    // Gradient from black/dark gray to whiter
+    // idx: 0 -> #121212
+    // idx: 1 -> #2d2d2d
+    // idx: 2 -> #555555
+    // idx: 3 -> #9c9c9c
+    const bgs = ['#121212', '#2a2a2a', '#555555', '#999999'];
+    return bgs[idx] || '#121212';
+  }
+
+  getCatBorder(idx: number): string {
+    const borders = ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.15)', 'rgba(255,255,255,0.25)', 'rgba(0,0,0,0.15)'];
+    return borders[idx] || 'rgba(255,255,255,0.1)';
+  }
+
+  getCatColor(idx: number): string {
+    // If bg is light (last one), text should be black
+    return idx === 3 ? '#000000' : '#ffffff';
   }
 
   getUserInitial(): string {
